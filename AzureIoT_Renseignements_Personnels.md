@@ -61,7 +61,6 @@
 				AZureIoTHubClient_ProcessLoop
 
 				if number of publish is pair
-
 					AzureIoTHubClient_SendPropertiesReported
 
 				endif
@@ -101,6 +100,10 @@
 
 * Provisioning ou allocution automatique de ressources: Processus permettant d'adapter un service aux besoins d'un client et de le configurer. (Wikipédia)
 
+* Internet of Things: Connecter un appareil à internet afin d'envoyer des données de télémétrie (exemple: température, pourcentage de CPU utilisé etc...)
+
+* MQTT: protocole assurant la communication entre 2 appareils utilisant des technologies différentes. Ce protocole est utilisé à cause de sa légèreté
+
 * `AzureIoT_Init`
 
 	Initialisation de Azure IoT middleware
@@ -129,22 +132,73 @@
 	Déinitialize le client de provisioning de Azure IoT
 
 * `AzureIoTHubClient_Init`
+
+	Initialise le client Azure IoT Hub
+
 * `AzureIoTHubClient_SetSymetricKey`
+
+	Définit la clé symétrique à utiliser pour l'authentification
+
 * `AzureIoTHubClient_Connect`
+
+	Connection au hub IoT via MQTT (Protocole permettant le transfert cross platform)
+
 * `AzureIoTHubClient_SubscribeCloudToDeviceMessage`
+
+	Subscribe to cloud to device message. Cela signifie qu'on indique au serveur que celui-ci peut envoyer des messages au device... (J'en suis pas sûr...)
+
 * `AzureIoTHubClient_SubscribeCommand`
+
+	Subscribe to commands. Cela signifie qu'on indique au serveur qu'il peut donner au device des commandes que celui-ci exécutera
+
 * `AzureIoTHubClient_SubscribeProperties`
+
+	Subscribe to device properties. Cela signifie que le serveur peut accéder aux propriétés de l'appareil
+
 * `AzureIoTHubClient_RequestPropertiesAsync`
+
+	Requête pour obtenir les propriétés de l'appareil. (Le async indique peut-être que la réponse arrivera d'une manière asynchrone, donc qu'on peut attendre plus ou moins longtemps...)
+
 * `AzureIoTHubClient_SendTelemetry`
+
+	On envoie les données de télémétrie au hub IoT
+
 * `AzureIoTHubClient_ProcessLoop`
+
+	On reçoit touts les messages MQTT entrants, et on s'occupe de gérer la connection MQTT au hub IoT
+
 * `AzureIoTHubClient_SendPropertiesReported`
+
+	Permet d'envoyer les propriétés des appareils signalés au hub Azure IoT (Pour pouvoir utiliser cette fonction, il faut que `AzureIoTHubClient_SubscribeProperties()` soit appelée...)
+
 * `AzureIoTHubClient_UnsubscribeProperties`
+
+	Permet d'indiquer au serveur qu'il ne pourra plus obtenir les propriétés du device
+
 * `AzureIoTHubClient_UnsubscribeCommand`
+
+	Permet d'indiquer au serveur qu'il ne pourra plus envoyer de commandes au device
+
 * `AzureIoTHubClient_UnsubscribeCloudToDeviceMessage`
+
+	Permet d'indiquer au serveur qu'il ne peut plus envoyer de messages au device
+
 * `AzureIoTHubClient_Disconnect`
+
+	Permet de déconnecter le client du hub IoT
+
 * `AzureIoTMessage_PropertiesInit`
+
+	Permet d'initialiser les headers du message
+
 * `AzureIoTMessage_PropertiesAppend`
+
+	Permet d'ajouter des informations au header
+
 * `TLS_Socket_Connect`
+
+
+
 * `TLS_Socket_Disconnect`
 
 
