@@ -5,17 +5,22 @@
 
 	AzureIoT_Init
 
-	Set Up Network Credentials				(On initialise une structure contenant des informations d'identification pour le réseau)
+	Set Up Network Credentials				(On initialise une structure contenant des informations d'identification pour le r�seau)
 
 	
 
 			TLS_Socket_Connect
-		
+
+	if DPS (Device Provisioning Service) is enable
 	
 		AzureIoTProvisioningClient_Init
 		
-		AzureIoTProvisioningClient_SetSymetricKey
+		if symetric key were given in menuconfig
 
+			AzureIoTHubProvisioningClient_SetSymetricKey
+
+		endif
+		
 		do: AzureIoTProvisioningClient_Register  while: error
 
 		AzureIoTProvisioningClient_GetDeviceAndHub
@@ -23,6 +28,8 @@
 		AzureIoTProvisioningClient_Deinit
 
 		TLS_Socket_Disconnect
+
+	endif
 
 	while true
 
@@ -34,7 +41,11 @@
 
 			AzureIoTHubClient_Init
 
-			AzureIoTHubClient_SetSymetricKey
+			if symetric key were given in menuconfig
+
+				AzureIoTHubClient_SetSymetricKey
+
+			endif
 
 			AzureIoTHubClient_Connect
 
@@ -96,13 +107,17 @@
 
 
 
-# Détails Fonctions
+# D�tails Fonctions
 
-* Provisioning ou allocution automatique de ressources: Processus permettant d'adapter un service aux besoins d'un client et de le configurer. (Wikipédia)
+* Provisioning ou allocution automatique de ressources: Processus permettant d'adapter un service aux besoins d'un client et de le configurer. (Wikip�dia)
 
-* Internet of Things: Connecter un appareil à internet afin d'envoyer des données de télémétrie (exemple: température, pourcentage de CPU utilisé etc...)
+* Internet of Things: Connecter un appareil à internet afin d'envoyer des donn�es de t�l�m�trie (exemple: temp�rature, pourcentage de CPU utilis� etc...)
 
-* MQTT: protocole assurant la communication entre 2 appareils utilisant des technologies différentes. Ce protocole est utilisé à cause de sa légèreté
+* MQTT: protocole assurant la communication entre 2 appareils utilisant des technologies diff�rentes. Ce protocole est utilis� à cause de sa l�gèret�
+
+* QOS: Utilisation de mécanismes ou de technologies fonctionnant sur un réseau pour contrôler le trafic et assurer la performance des applications critiques avec une capacité réseau limitée (fortinet.com)
+
+* TLS: s�curisation des �changes faits sur les r�seaux informatiques
 
 * `AzureIoT_Init`
 
@@ -114,22 +129,22 @@
 
 * `AzureIoTProvisioningClient_SetSymetricKey`
 
-	Définition de la clé symétrique à utiliser pour l'authentification
+	D�finition de la cl� sym�trique � utiliser pour l'authentification
 
 * `AzureIoTProvisioningClient_Register`
 
 	- Commence le processus de provisioning... L'appel initial de cette fonction permet de demander au service de faire du provisioning pour le device.
-	- Si on appelle à nouveau cette fonction sur le même `AzureIoTProvisioningClient_t`, on aura l'erreur "eAzureIoTErrorPending" qui sera
-	renvoyé, et la fonction va simplement regarder si l'autentification a été un succès ou pas.
-	- Après un succès, on peut appeler la fonction `AzureIoTProvisioningClient_GetDeviceAndHub` pour obtenir le hub IoT et l'ID du device
+	- Si on appelle � nouveau cette fonction sur le m�me `AzureIoTProvisioningClient_t`, on aura l'erreur "eAzureIoTErrorPending" qui sera
+	renvoy�, et la fonction va simplement regarder si l'autentification a �t� un succ�s ou pas.
+	- Apr�s un succ�s, on peut appeler la fonction `AzureIoTProvisioningClient_GetDeviceAndHub` pour obtenir le hub IoT et l'ID du device
 
 * `AzureIoTProvisioningClient_GetDeviceAndHub`
 
-	Après que l'authentification a été réussie, cette fonction permet d'obtenir le hostname du hub IoT et l'ID du device (l'identifiant)
+	Apr�s que l'authentification a �t� r�ussie, cette fonction permet d'obtenir le hostname du hub IoT et l'ID du device (l'identifiant)
 
 * `AzureIoTProvisioningClient_Deinit`
 
-	Déinitialize le client de provisioning de Azure IoT
+	D�initialize le client de provisioning de Azure IoT
 
 * `AzureIoTHubClient_Init`
 
@@ -137,7 +152,7 @@
 
 * `AzureIoTHubClient_SetSymetricKey`
 
-	Définit la clé symétrique à utiliser pour l'authentification
+	D�finit la cl� sym�trique � utiliser pour l'authentification
 
 * `AzureIoTHubClient_Connect`
 
@@ -145,35 +160,35 @@
 
 * `AzureIoTHubClient_SubscribeCloudToDeviceMessage`
 
-	Subscribe to cloud to device message. Cela signifie qu'on indique au serveur que celui-ci peut envoyer des messages au device... (J'en suis pas sûr...)
+	Subscribe to cloud to device message. Cela signifie qu'on indique au serveur que celui-ci peut envoyer des messages au device... (J'en suis pas s�r...)
 
 * `AzureIoTHubClient_SubscribeCommand`
 
-	Subscribe to commands. Cela signifie qu'on indique au serveur qu'il peut donner au device des commandes que celui-ci exécutera
+	Subscribe to commands. Cela signifie qu'on indique au serveur qu'il peut donner au device des commandes que celui-ci ex�cutera
 
 * `AzureIoTHubClient_SubscribeProperties`
 
-	Subscribe to device properties. Cela signifie que le serveur peut accéder aux propriétés de l'appareil
+	Subscribe to device properties. Cela signifie que le serveur peut acc�der aux propri�t�s de l'appareil
 
 * `AzureIoTHubClient_RequestPropertiesAsync`
 
-	Requête pour obtenir les propriétés de l'appareil. (Le async indique peut-être que la réponse arrivera d'une manière asynchrone, donc qu'on peut attendre plus ou moins longtemps...)
+	Requ�te pour obtenir les propri�t�s de l'appareil. (Le async indique peut-�tre que la r�ponse arrivera d'une mani�re asynchrone, donc qu'on peut attendre plus ou moins longtemps...)
 
 * `AzureIoTHubClient_SendTelemetry`
 
-	On envoie les données de télémétrie au hub IoT
+	On envoie les donn�es de t�l�m�trie au hub IoT
 
 * `AzureIoTHubClient_ProcessLoop`
 
-	On reçoit touts les messages MQTT entrants, et on s'occupe de gérer la connection MQTT au hub IoT
+	On re�oit touts les messages MQTT entrants, et on s'occupe de g�rer la connection MQTT au hub IoT
 
 * `AzureIoTHubClient_SendPropertiesReported`
 
-	Permet d'envoyer les propriétés des appareils signalés au hub Azure IoT (Pour pouvoir utiliser cette fonction, il faut que `AzureIoTHubClient_SubscribeProperties()` soit appelée...)
+	Permet d'envoyer les propri�t�s des appareils signal�s au hub Azure IoT (Pour pouvoir utiliser cette fonction, il faut que `AzureIoTHubClient_SubscribeProperties()` soit appel�e...)
 
 * `AzureIoTHubClient_UnsubscribeProperties`
 
-	Permet d'indiquer au serveur qu'il ne pourra plus obtenir les propriétés du device
+	Permet d'indiquer au serveur qu'il ne pourra plus obtenir les propri�t�s du device
 
 * `AzureIoTHubClient_UnsubscribeCommand`
 
@@ -185,7 +200,7 @@
 
 * `AzureIoTHubClient_Disconnect`
 
-	Permet de déconnecter le client du hub IoT
+	Permet de d�connecter le client du hub IoT
 
 * `AzureIoTMessage_PropertiesInit`
 
@@ -202,3 +217,128 @@
 * `TLS_Socket_Disconnect`
 
 
+# Param�tres des fonctions
+
+* `AzureIoT_Init`
+
+	Aucun
+
+* `AzureIoTProvisioningClient_Init`
+
+
+
+* `AzureIoTProvisioningClient_SetSymetricKey`
+
+
+
+* `AzureIoTProvisioningClient_Register`
+
+
+* `AzureIoTProvisioningClient_GetDeviceAndHub`
+
+
+
+* `AzureIoTProvisioningClient_Deinit`
+
+
+
+* `AzureIoTHubClient_Init`
+
+	- AzureIoTHubClinet_t *
+	- hostname
+	- hostname length
+	- Device ID
+	- Device ID length
+	- AzureIoTHubClientOptions_t *
+	- Buffer (Used for middleware operations and MQTT messages)
+	- Buffer length
+	- AzureIoTHubGetCurrentTimeFunc_t
+	- AzureIoTTransportInterface_t *
+
+* `AzureIoTHubClient_SetSymetricKey`
+
+
+
+* `AzureIoTHubClient_Connect`
+
+	- AzureIoTHubClient_t *
+	- new session ?
+	- Other session already exist ?
+	- wait time
+
+* `AzureIoTHubClient_SubscribeCloudToDeviceMessage`
+
+	- AzureIoTHubClient_t
+	- Other function to invoke when a cloud message arrive
+	- Other context
+	- Wait time for say that all is done
+	
+* `AzureIoTHubClient_SubscribeCommand`
+
+	- AzureIoTHubClient_t *
+	- Other function to invoke when a command arrive
+	- other context
+	- wait time for say all is done
+
+* `AzureIoTHubClient_SubscribeProperties`
+
+	- AzureIoTHubClient_t *
+	- Other function to invoke when device properties arrive
+	- Other context
+	- Wait time for say that all is done
+
+* `AzureIoTHubClient_RequestPropertiesAsync`
+
+	- AzureIoTHubClient_t *
+
+* `AzureIoTHubClient_SendTelemetry`
+
+	- AzureIoTHubClient_t*
+	- telemetry data
+	- telemetry data length
+	- header (properties bag)
+	- QOS use for telemetry (I don't know what is it...)
+	- telemetry ID (I don't know what is it... Perhaps, it's the id that permit to server to detect that data comes from sensor and not cpu for instance...)
+
+* `AzureIoTHubClient_ProcessLoop`
+
+	- AzureIoTHubClient_t *
+	- Timeout
+
+* `AzureIoTHubClient_SendPropertiesReported`
+
+	- AzureIoTHubClient_t *
+	- payload of properties formatted
+	- payload length
+	- request ID used to send reported property
+
+* `AzureIoTHubClient_UnsubscribeProperties`
+
+	- AzureIoTHubClient_t *
+
+* `AzureIoTHubClient_UnsubscribeCommand`
+
+	- AzureIoTHubClient_t *
+
+* `AzureIoTHubClient_UnsubscribeCloudToDeviceMessage`
+
+	- AzureIoTHubClient_t *
+
+* `AzureIoTHubClient_Disconnect`
+
+	- AzureIoTHubClient_t *
+
+* `AzureIoTMessage_PropertiesInit`
+
+	- AzureIoTMessageProperties_t *
+	- Buffer
+	- length of properties already written
+	- Buffer length
+
+* `AzureIoTMessage_PropertiesAppend`
+
+	- AzureIoTMessageProperties_t *
+	- property name
+	- property length name
+	- property value
+	- property length value
